@@ -1,0 +1,45 @@
+#include "melody.h"
+
+const int BUZZER = 12;
+const int buttonPin = 6;
+
+int buttonState = 0;
+int melody[] = {
+  NOTE_G4, NOTE_C5, NOTE_B4, NOTE_C5, NOTE_D5, NOTE_C5, NOTE_D5,
+  NOTE_E5, NOTE_F5, NOTE_E5, NOTE_A4, NOTE_D5, NOTE_D5, NOTE_C5, NOTE_C5,
+  NOTE_C5, NOTE_B4, NOTE_A4, NOTE_A4, NOTE_C5, NOTE_G4, NOTE_G4, NOTE_C5,
+  NOTE_B4, NOTE_C5, NOTE_D5, NOTE_C5, NOTE_D5, NOTE_E5, NOTE_F5, NOTE_E5,
+  NOTE_A4, NOTE_D5, NOTE_D5, NOTE_C5, NOTE_C5, NOTE_C5, NOTE_B4, NOTE_A4,
+  NOTE_B4, NOTE_C5, NOTE_G4, NOTE_G4, NOTE_C5, NOTE_A0, NOTE_D5, NOTE_A0,
+  NOTE_E5, NOTE_E5, NOTE_F5, NOTE_E5, NOTE_A4, NOTE_D5, NOTE_D5, NOTE_C5, NOTE_C5, NOTE_C5,
+  NOTE_B4, NOTE_A4, NOTE_B4, NOTE_C5};
+// note durations: 4 = quarter note, 8 = eighth note, etc.:
+int noteDurations[] = {4, 4, 8, 8, 4, 8, 8, 4, 8, 8, 4, 8, 8, 4, 8, 8, 4, 8, 8, 2.5,
+8, 8, 4, 8, 8, 4, 8, 8, 4, 8, 8, 4, 8, 8, 4, 8, 8, 4, 8, 8,2.5, 8, 8, 4, 4, 4, 4,
+8, 8, 8, 8, 4, 8, 8, 4, 8, 8, 4, 8, 8, 2,5};
+
+void setup() {
+  pinMode(buttonPin, INPUT_PULLUP);
+  pinMode(BUZZER, OUTPUT);
+}
+
+void loop() {
+  //
+  buttonState = digitalRead(buttonPin);
+  int buttonInput = digitalRead(buttonPin);//버튼 값을 읽어서 변수에 넣는다()
+  //만약에 버튼이 눌려지면 1값이 들어올때 음악을 실행한다
+  Serial.println(buttonInput);
+  
+  if (buttonState == HIGH) {
+     for (int n = 0; n < 61; n++) {  
+   int noteDuration = 1000 / noteDurations[n]; //음의 길이를 초단위로 변경
+    tone(BUZZER, melody[n], noteDurations); //해당 핀에서 주파수와 음의 길이를 피에조로 음을 출력
+    int pauseBetweenNotes = noteDuration * 1.30; // 음과 음사이에 쉬는 것은 noteDuration의  30%
+    delay(pauseBetweenNotes); // 음과 음사이의 갚으로 지연시킴
+    noTone(BUZZER); // 연주를 멈춘다
+  }
+}
+  else {
+    noTone(BUZZER); // 연주를 멈춘다
+  }
+}   
